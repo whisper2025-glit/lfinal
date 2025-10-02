@@ -2,7 +2,7 @@
 
 import qs from 'query-string'
 import { cn } from '@/lib/utils'
-import { Category } from '@prisma/client'
+import type { Category } from '@/types/companion'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React from 'react'
 
