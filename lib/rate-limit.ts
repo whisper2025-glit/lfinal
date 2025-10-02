@@ -1,13 +1,19 @@
-import { Ratelimit } from '@upstash/ratelimit'
-import { Redis } from '@upstash/redis'
+const requestHistory = new Map<string, number[]>()
 
-export async function rateLimit(identifier: string) {
-  const ratelimit = new Ratelimit({
-    redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(10, '10 s'),
-    analytics: true,
-    prefix: '@upstash/ratelimit',
-  })
+const WINDOW_MS = 10_000
+const LIMIT = 10
 
-  return await ratelimit.limit(identifier)
+export const rateLimit = async (identifier: string) => {
+  const now = Date.now()
+  const timestamps = requestHistory.get(identifier) ?? []
+  const recent = timestamps.filter((timestamp) => now - timestamp < WINDOW_MS)
+
+  if (recent.length >= LIMIT) {
+    requestHistory.set(identifier, recent)
+    return { success: false }
+  }
+
+  recent.push(now)
+  requestHistory.set(identifier, recent)
+  return { success: true }
 }
