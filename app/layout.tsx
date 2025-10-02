@@ -1,8 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { ClerkProvider } from '@clerk/nextjs'
-import { ptBR, enUS } from '@clerk/localizations'
 
 import { ThemeProvider } from '@/components/theme-provider'
 import { cn } from '@/lib/utils'
@@ -27,18 +25,16 @@ export default function RootLayout({ children }: RootLayoutProps) {
   const messages = useMessages()
 
   return (
-    <ClerkProvider localization={locale === 'pt' ? ptBR : enUS}>
-      <html lang={locale} suppressHydrationWarning>
-        <body className={cn('bg-secondary', inter.className)}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <NextIntlClientProvider locale={locale} messages={messages}>
-              <ProModal />
-              {children}
-            </NextIntlClientProvider>
-            <Toaster />
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang={locale} suppressHydrationWarning>
+      <body className={cn('bg-secondary', inter.className)}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <ProModal />
+            {children}
+          </NextIntlClientProvider>
+          <Toaster />
+        </ThemeProvider>
+      </body>
+    </html>
   )
 }
